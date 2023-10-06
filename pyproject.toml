@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "open-interpreter-plugin-browse"
+packages = [
+    {include = "browse"},
+]
+version = "0.1.0"
+description = "Browser search plugin for Open Interpreter"
+authors = ["Eric Allen <eric@ericrallen.dev>"]
+readme = "README.md"
+
+[tool.poetry.plugins]
+[tool.poetry.plugins."interpreter.plugins"]
+browse = "browse.main:plugin"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
