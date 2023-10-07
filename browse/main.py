@@ -1,45 +1,43 @@
+import re
+import requests
+from bs4 import BeautifulSoup
+from markdownify import markdownify as md
+
 from .plugin import InterpreterPlugin
 
 plugin = InterpreterPlugin("browser")
 
 
-def search(self, query):
-    return {"results": ["result 1", "result 2", "result 3", "result 4", "result 5"]}
+def browse(self, url=""):
+    page_request = requests.get(url)
 
+    page = BeautifulSoup(page_request.text, "html.parser")
 
-def browse(self, url):
-    return {
-        "title": "Page Title",
-        "content": "<html><body><h1>Page Content</h1></body></html>",
-    }
+    title = page.title.string
 
+    body = page.body
 
-print("Registering search function...")
+    [element.extract() for element in page(['iframe', 'script'])]
 
-plugin.register_function(
-    {
-        "name": "search",
-        "description": "Searches Google for the given query and returns the top 5 results",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "The query to search for (required parameter to the `search` function)",
-                },
-            },
-            "required": ["query"],
-        },
-    },
-    function=search,
-)
+    content = md("".join(str(item) for item in body.contents))
 
-print("Registering browse function...")
+    content = re.sub(r"\n\s+", "\n", content).strip()
+
+    return f"""
+    The content of {url} is:
+
+    ```markdown
+    # {title}
+
+    {content}
+    ```
+    """
+
 
 plugin.register_function(
     {
         "name": "browse",
-        "description": "Navigate to a webpage in a headless browser, render the page content, and return the title of the page and the content of the page as HTML for parsing",
+        "description": "Scrape the content from the provided URL and return the title of the page and the content of the page as a Markdown document.",
         "parameters": {
             "type": "object",
             "properties": {

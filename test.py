@@ -1,3 +1,5 @@
 from browse.main import plugin
 
-print(plugin.get_functions())
+results = plugin.execute_function("browse", {"url": "https://lite.cnn.com"})
+
+print(results)

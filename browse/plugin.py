@@ -16,4 +16,4 @@ class InterpreterPlugin:
         if function_name not in self.callMap:
             return {"error": "Function not found"}
         else:
-            return self.callMap[function_name](parameters)
+            return self.callMap[function_name](self, **parameters)
