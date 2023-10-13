@@ -1,7 +1,9 @@
 [tool.poetry]
-name = "open-interpreter-plugin-browse"
+name = "open-interpreter-retriever"
+
 packages = [
-    {include = "browse"},
+    {include = "retrieve"},
+    {include = "api"}
 ]
 version = "0.1.0"
 description = "Browser search plugin for Open Interpreter"
@@ -10,13 +12,16 @@ readme = "README.md"
 
 [tool.poetry.plugins]
 [tool.poetry.plugins."interpreter.plugins"]
+retrieve = "retrieve.main:plugin"
+retriever = "retrieve.main:plugin"
 browse = "browse.main:plugin"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.2"
 markdownify = "^0.11.6"
+gcsfs = "^2023.9.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
